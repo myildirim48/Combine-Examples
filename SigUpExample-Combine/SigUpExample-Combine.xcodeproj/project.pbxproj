@@ -13,6 +13,7 @@
 		743EAC8E29D05C7D0034BC54 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 743EAC8D29D05C7D0034BC54 /* Assets.xcassets */; };
 		743EAC9129D05C7D0034BC54 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 743EAC8F29D05C7D0034BC54 /* LaunchScreen.storyboard */; };
 		743EAC9929D05CD20034BC54 /* UIVİew+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 743EAC9829D05CD20034BC54 /* UIVİew+Ext.swift */; };
+		74981B6529D184540015B214 /* SignUpviewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74981B6429D184540015B214 /* SignUpviewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		743EAC9029D05C7D0034BC54 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		743EAC9229D05C7D0034BC54 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		743EAC9829D05CD20034BC54 /* UIVİew+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIVİew+Ext.swift"; sourceTree = "<group>"; };
+		74981B6429D184540015B214 /* SignUpviewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpviewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +62,7 @@
 				743EAC8629D05C7C0034BC54 /* SceneDelegate.swift */,
 				743EAC9829D05CD20034BC54 /* UIVİew+Ext.swift */,
 				743EAC8829D05C7C0034BC54 /* ViewController.swift */,
+				74981B6429D184540015B214 /* SignUpviewModel.swift */,
 				743EAC8D29D05C7D0034BC54 /* Assets.xcassets */,
 				743EAC8F29D05C7D0034BC54 /* LaunchScreen.storyboard */,
 				743EAC9229D05C7D0034BC54 /* Info.plist */,
@@ -140,6 +143,7 @@
 				743EAC9929D05CD20034BC54 /* UIVİew+Ext.swift in Sources */,
 				743EAC8929D05C7C0034BC54 /* ViewController.swift in Sources */,
 				743EAC8529D05C7C0034BC54 /* AppDelegate.swift in Sources */,
+				74981B6529D184540015B214 /* SignUpviewModel.swift in Sources */,
 				743EAC8729D05C7C0034BC54 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

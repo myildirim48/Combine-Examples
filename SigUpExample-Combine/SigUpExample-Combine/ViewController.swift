@@ -18,12 +18,10 @@ class ViewController: UIViewController {
     let confirmButton = UIButton()
     
     //MARK: - Subject
+
+    private var viewModel = SignUpViewModel()
     
-    private var emailSubject = CurrentValueSubject<String,Never>("")
-    private var passwordSubject = CurrentValueSubject<String,Never>("")
-    private var passwordConfirmationSubject = CurrentValueSubject<String,Never>("")
-    private var agreeTermSubject = CurrentValueSubject<Bool,Never>(false)
-    private var cancellable : Set<AnyCancellable> = []
+    private var cancellables : Set<AnyCancellable> = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,74 +30,36 @@ class ViewController: UIViewController {
         
         configure()
         
-        formIsValid
-            .assign(to: \.isEnabled, on: confirmButton)
-            .store(in: &cancellable)
-        
-        setValidColor(field: emailField, publisher: emailIsValid)
-        setValidColor(field: passwordField, publisher: passwordIsValid)
-        setValidColor(field: passwordConfirmationField, publisher: passwordMatchesConfirmation)
-        
-        formattedEmailAddress
-            .filter { [weak self] in $0 != self?.emailSubject.value }
+        viewModel.$email
             .map { $0 as String? }
-            .assign(to: \.text,on: emailField)
-            .store(in: &cancellable)
+            .assign(to: \.text, on: emailField)
+            .store(in: &cancellables)
+        
+        viewModel.$emailFieldTextColor
+            .assign(to: \.textColor, on: emailField)
+            .store(in: &cancellables)
+        
+        viewModel.$passwordFieldTextColor
+            .assign(to: \.textColor, on: passwordField)
+            .store(in: &cancellables)
+        
+        viewModel.$passwordConfirmationFieldTextColor
+            .assign(to: \.textColor, on: passwordConfirmationField)
+            .store(in: &cancellables)
+        
+        viewModel.$signUpButtonEnabled
+            .assign(to: \.isEnabled, on: confirmButton)
+            .store(in: &cancellables)
     }
     
-    private func setValidColor<P: Publisher> (field: UITextField, publisher: P) where P.Output == Bool, P.Failure == Never {
+
+    //MARK: -  Publishers
+    
+    func setValidColor<P: Publisher> (field: UITextField, publisher: P) where P.Output == Bool, P.Failure == Never {
         publisher
             .map{ $0 ? UIColor.label : UIColor.systemRed}
             .assign(to: \.textColor, on: field)
-            .store(in: &cancellable)
-    }
-    
-    private func isValidEmail(_ email: String) -> Bool {
-        email.contains("@") && email.contains(".")
-    }
-    //MARK: -  Publishers
-    private var formIsValid: AnyPublisher<Bool, Never>{
-        
-        Publishers.CombineLatest3(emailIsValid, passwordValidandConfirmed,agreeTermSubject)
-            .map{ $0.0 && $0.1 && $0.2}
-            .eraseToAnyPublisher()
-    }
-    
-    private var formattedEmailAddress: AnyPublisher<String, Never>{
-        emailSubject
-            .map { $0.lowercased() }
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines)}
-            .eraseToAnyPublisher()
-    }
-    
-    private var emailIsValid: AnyPublisher<Bool,Never>{
-        formattedEmailAddress
-            .map { [weak self] in self?.isValidEmail($0) }
-            .replaceNil(with: false)
-            .eraseToAnyPublisher()
-    }
-    
-    private var passwordValidandConfirmed: AnyPublisher<Bool, Never>{
-        passwordIsValid.combineLatest(passwordMatchesConfirmation)
-            .map { valid, confirmed in
-                valid && confirmed
-            }.eraseToAnyPublisher()
-    }
-    
-    private var passwordIsValid: AnyPublisher<Bool, Never>{
-        passwordSubject
-            .map{
-                $0 != "password" && $0.count >= 8
-            }
-            .eraseToAnyPublisher()
-    }
-    
-    private var passwordMatchesConfirmation: AnyPublisher<Bool, Never> {
-        passwordSubject.combineLatest(passwordConfirmationSubject)
-            .map { pass, conf in
-                pass == conf
-            }.eraseToAnyPublisher()
-        
+            .store(in: &cancellables)
     }
     
     
@@ -111,16 +71,16 @@ class ViewController: UIViewController {
         present(alert, animated: true, completion: nil)
     }
     @objc func emailFieldDidchange(_ textField: UITextField) {
-        emailSubject.send(textField.text ?? "")
+        viewModel.email = textField.text ?? ""
     }
     @objc func passwordFiedDidChange(_ textField: UITextField) {
-        passwordSubject.send(textField.text ?? "")
+        viewModel.password = textField.text ?? ""
     }
     @objc func passwordConfirmationFiledDidchange(_ textField: UITextField) {
-        passwordConfirmationSubject.send(textField.text ?? "")
+        viewModel.passwordConfirmation =  textField.text ?? ""
     }
     @objc func termSwitchChanged(_ termSwitch: UISwitch){
-        agreeTermSubject.send(termSwitch.isOn)
+        viewModel.agreeTerms = termSwitch.isOn
     }
     
     //MARK: -  Configure
